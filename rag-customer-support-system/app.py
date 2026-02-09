@@ -1,19 +1,12 @@
-"""
-Tesla Cybertruck Customer Support System
-RAG-based chatbot with support ticket creation
-"""
 import streamlit as st
 import sys
 import os
 from datetime import datetime
 
-# Add src to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from src.rag_engine import RAGEngine
 import config
-
-# Page configuration
 st.set_page_config(
     page_title="Tesla Cybertruck Support",
     page_icon="🚙",
@@ -21,7 +14,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
 st.markdown("""
 <style>
     .main-header {
@@ -72,7 +64,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state
 if 'messages' not in st.session_state:
     st.session_state.messages = []
 
@@ -80,7 +71,6 @@ if 'rag_engine' not in st.session_state:
     with st.spinner("Initializing support system..."):
         st.session_state.rag_engine = RAGEngine()
 
-# Sidebar
 with st.sidebar:
     st.markdown("### 🚙 Tesla Cybertruck Support")
     st.markdown("---")
@@ -117,11 +107,9 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# Main content
 st.markdown('<div class="main-header">🚙 Tesla Cybertruck Support Assistant</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-header">Ask questions about your Cybertruck or create support tickets</div>', unsafe_allow_html=True)
 
-# Display chat messages
 for message in st.session_state.messages:
     role = message["role"]
     content = message["content"]
@@ -131,7 +119,6 @@ for message in st.session_state.messages:
     else:
         st.markdown(f'<div class="chat-message assistant-message">🤖 <strong>Assistant:</strong><br>{content}</div>', unsafe_allow_html=True)
 
-        # Display sources if available
         if "sources" in message and message["sources"]:
             with st.expander("📚 View Sources"):
                 for i, source in enumerate(message["sources"], 1):
@@ -140,23 +127,19 @@ for message in st.session_state.messages:
                     st.text(source['text'][:200] + "...")
                     st.markdown("---")
 
-# Chat input
 user_input = st.chat_input("Ask a question or request support...")
 
 if user_input:
-    # Add user message to history
     st.session_state.messages.append({
         "role": "user",
         "content": user_input,
         "timestamp": datetime.now()
     })
 
-    # Get response from RAG engine
     with st.spinner("Thinking..."):
-        # Prepare conversation history for RAG engine
         conversation_history = [
             {"role": msg["role"], "content": msg["content"]}
-            for msg in st.session_state.messages[:-1]  # Exclude current message
+            for msg in st.session_state.messages[:-1]
         ]
 
         response = st.session_state.rag_engine.query(
@@ -164,7 +147,6 @@ if user_input:
             conversation_history=conversation_history
         )
 
-    # Add assistant response to history
     assistant_message = {
         "role": "assistant",
         "content": response['content'],
@@ -180,10 +162,8 @@ if user_input:
 
     st.session_state.messages.append(assistant_message)
 
-    # Rerun to display new messages
     st.rerun()
 
-# Footer
 st.markdown("---")
 st.markdown(
     '<div style="text-align: center; color: #666; font-size: 0.9rem;">'

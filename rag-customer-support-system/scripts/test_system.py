@@ -1,15 +1,9 @@
-"""
-Test Script for RAG System
-Verify all components are working correctly
-"""
 import sys
 import os
 
-# Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def test_imports():
-    """Test that all modules can be imported"""
     print("Testing imports...")
     try:
         import config
@@ -24,7 +18,6 @@ def test_imports():
         return False
 
 def test_config():
-    """Test configuration"""
     print("\nTesting configuration...")
     try:
         import config
@@ -50,7 +43,6 @@ def test_config():
         return False
 
 def test_datasource():
-    """Test datasource directory"""
     print("\nTesting datasource...")
     try:
         import config
@@ -71,7 +63,6 @@ def test_datasource():
         return False
 
 def test_document_processor():
-    """Test document processor"""
     print("\nTesting document processor...")
     try:
         from src.document_processor import DocumentProcessor
@@ -94,7 +85,6 @@ def test_document_processor():
         return False
 
 def main():
-    """Run all tests"""
     print("=" * 60)
     print("RAG System Component Tests")
     print("=" * 60)

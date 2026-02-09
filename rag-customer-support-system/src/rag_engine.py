@@ -1,7 +1,3 @@
-"""
-RAG Engine Module
-Core RAG system integrating retrieval, LLM, and function calling
-"""
 from openai import OpenAI
 from typing import List, Dict, Optional
 import json
@@ -10,10 +6,7 @@ from src.ticket_manager import TicketManager
 import config
 
 class RAGEngine:
-    """Main RAG engine for question answering and ticket creation"""
-
     def __init__(self):
-        """Initialize RAG engine"""
         self.client = OpenAI(api_key=config.OPENAI_API_KEY)
         self.vector_store = VectorStore(persist_directory=config.VECTOR_DB_PATH)
         self.ticket_manager = TicketManager(
@@ -23,27 +16,9 @@ class RAGEngine:
         self.conversation_history = []
 
     def search_documents(self, query: str) -> List[Dict]:
-        """
-        Search for relevant documents
-
-        Args:
-            query: User query
-
-        Returns:
-            List of relevant document chunks
-        """
         return self.vector_store.search(query, top_k=config.TOP_K_RESULTS)
 
     def format_context(self, results: List[Dict]) -> str:
-        """
-        Format search results into context string
-
-        Args:
-            results: Search results from vector store
-
-        Returns:
-            Formatted context string with citations
-        """
         if not results:
             return "No relevant information found in the documentation."
 
@@ -63,30 +38,16 @@ class RAGEngine:
         user_message: str,
         conversation_history: Optional[List[Dict]] = None
     ) -> Dict:
-        """
-        Process user query with RAG
-
-        Args:
-            user_message: User's question or request
-            conversation_history: Previous conversation messages
-
-        Returns:
-            Dictionary with response and metadata
-        """
-        # Search for relevant documents
         search_results = self.search_documents(user_message)
         context = self.format_context(search_results)
 
-        # Prepare messages
         messages = [
             {"role": "system", "content": config.SYSTEM_PROMPT}
         ]
 
-        # Add conversation history (last 10 messages)
         if conversation_history:
             messages.extend(conversation_history[-10:])
 
-        # Add current query with context
         user_content = f"""User Question: {user_message}
 
 Relevant Documentation:
@@ -96,7 +57,6 @@ Please answer the question based on the documentation above. Always cite your so
 
         messages.append({"role": "user", "content": user_content})
 
-        # Call OpenAI with function calling
         try:
             response = self.client.chat.completions.create(
                 model=config.OPENAI_MODEL,
@@ -109,7 +69,6 @@ Please answer the question based on the documentation above. Always cite your so
 
             message = response.choices[0].message
 
-            # Check if function was called
             if message.tool_calls:
                 return self._handle_function_call(message, user_message)
             else:
@@ -127,16 +86,6 @@ Please answer the question based on the documentation above. Always cite your so
             }
 
     def _handle_function_call(self, message, user_message: str) -> Dict:
-        """
-        Handle function calling from LLM
-
-        Args:
-            message: OpenAI message with function call
-            user_message: Original user message
-
-        Returns:
-            Dictionary with function result
-        """
         tool_call = message.tool_calls[0]
         function_name = tool_call.function.name
 
@@ -179,5 +128,4 @@ Please answer the question based on the documentation above. Always cite your so
         }
 
     def get_stats(self) -> Dict:
-        """Get system statistics"""
         return self.vector_store.get_collection_stats()

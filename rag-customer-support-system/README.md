@@ -13,7 +13,7 @@ A production-ready RAG (Retrieval-Augmented Generation) based customer support c
 
 ## 📋 Requirements
 
-- Python 3.9+
+- Python 3.10+
 - OpenAI API Key
 - GitHub Personal Access Token (for ticket creation)
 - GitHub Repository (for issue tracking)
@@ -24,7 +24,7 @@ A production-ready RAG (Retrieval-Augmented Generation) based customer support c
 
 ```bash
 git clone <your-repo-url>
-cd rag
+cd rag-customer-support-system
 ```
 
 ### 2. Install Dependencies
@@ -35,25 +35,31 @@ pip install -r requirements.txt
 
 ### 3. Configure Environment Variables
 
-Copy `.env.example` to `.env` and fill in your credentials:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your actual values:
+Create a `.env` file in the project root with at least:
 
 ```env
-OPENAI_API_KEY=sk-your-actual-openai-api-key
-GITHUB_TOKEN=ghp_your-actual-github-token
-GITHUB_REPO=username/repository-name
+OPENAI_API_KEY=sk-your-openai-api-key
+OPENAI_MODEL=gpt-4.1-mini
+TEMPERATURE=0.7
+MAX_TOKENS=1000
+
+GITHUB_TOKEN=ghp_your-github-token
+GITHUB_REPO=your-username/your-repo
+
+COMPANY_NAME=Tesla Cybertruck Support
+COMPANY_EMAIL=support@cybertruck-support.com
+COMPANY_PHONE=+1-800-TESLA-CT
+
+CHUNK_SIZE=500
+CHUNK_OVERLAP=50
+TOP_K_RESULTS=3
+
+DATASOURCE_DIR=datasource
+VECTOR_DB_PATH=chroma_db
 ```
 
-**Getting API Keys:**
-
-- **OpenAI API Key**: Get from [OpenAI Platform](https://platform.openai.com/api-keys)
-- **GitHub Token**: Create at [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
-  - Required scope: `repo` (for creating issues)
+- **OpenAI API Key**: Get from `https://platform.openai.com/api-keys`
+- **GitHub Token**: Create at `https://github.com/settings/tokens` with `repo` scope
 
 ### 4. Index Documents
 
@@ -237,7 +243,7 @@ The system uses 3 PDF documents:
 
 ## 🤝 Contributing
 
-This is a capstone project for Advanced Generative AI course. Feel free to fork and extend!
+This project is intended for educational use. Feel free to fork and extend.
 
 ## 📄 License
 
@@ -256,7 +262,3 @@ For issues or questions:
 - Email: support@cybertruck-support.com
 - Phone: +1-800-TESLA-CT
 - GitHub Issues: Create a ticket in this repository
-
----
-
-**Built with ❤️ for the Advanced Generative AI Capstone Project**

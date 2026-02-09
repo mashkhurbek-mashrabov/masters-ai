@@ -1,23 +1,10 @@
-"""
-Ticket Manager Module
-Handles GitHub Issues API integration for support ticket creation
-"""
 import requests
 import json
 from typing import Dict, Optional
 from datetime import datetime
 
 class TicketManager:
-    """Manage support tickets via GitHub Issues"""
-
     def __init__(self, github_token: str, github_repo: str):
-        """
-        Initialize ticket manager
-
-        Args:
-            github_token: GitHub personal access token
-            github_repo: Repository in format 'owner/repo'
-        """
         self.github_token = github_token
         self.github_repo = github_repo
         self.api_base = "https://api.github.com"
@@ -33,25 +20,12 @@ class TicketManager:
         title: str,
         description: str
     ) -> Dict:
-        """
-        Create a support ticket as a GitHub Issue
-
-        Args:
-            user_name: Name of the user
-            user_email: Email of the user
-            title: Ticket title/summary
-            description: Detailed description
-
-        Returns:
-            Dictionary with ticket information or error
-        """
         if not self.github_token or not self.github_repo:
             return {
                 'success': False,
                 'error': 'GitHub configuration missing. Please set GITHUB_TOKEN and GITHUB_REPO in .env file'
             }
 
-        # Format issue body
         issue_body = f"""**Support Ticket**
 
 **User Information:**
@@ -63,17 +37,15 @@ class TicketManager:
 {description}
 
 ---
-*This ticket was automatically created by the Tesla Cybertruck Support System*
+*This ticket was created by the Tesla Cybertruck Support System*
 """
 
-        # Create issue payload
         payload = {
             "title": f"[Support] {title}",
             "body": issue_body,
             "labels": ["support", "customer-inquiry"]
         }
 
-        # API endpoint
         url = f"{self.api_base}/repos/{self.github_repo}/issues"
 
         try:
@@ -102,16 +74,9 @@ class TicketManager:
             }
 
     def validate_config(self) -> bool:
-        """
-        Validate GitHub configuration
-
-        Returns:
-            True if configuration is valid
-        """
         if not self.github_token or not self.github_repo:
             return False
 
-        # Test API access
         url = f"{self.api_base}/repos/{self.github_repo}"
         try:
             response = requests.get(url, headers=self.headers)

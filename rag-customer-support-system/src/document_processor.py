@@ -1,37 +1,15 @@
-"""
-Document Processor Module
-Handles PDF loading, text extraction, and chunking with metadata preservation
-"""
 import fitz  # PyMuPDF
 import os
 from typing import List, Dict
 import tiktoken
 
 class DocumentProcessor:
-    """Process PDF documents for RAG system"""
-
     def __init__(self, chunk_size: int = 500, chunk_overlap: int = 50):
-        """
-        Initialize document processor
-
-        Args:
-            chunk_size: Maximum tokens per chunk
-            chunk_overlap: Number of overlapping tokens between chunks
-        """
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.encoding = tiktoken.get_encoding("cl100k_base")
 
     def load_pdf(self, pdf_path: str) -> List[Dict[str, any]]:
-        """
-        Load PDF and extract text with page numbers
-
-        Args:
-            pdf_path: Path to PDF file
-
-        Returns:
-            List of dictionaries with page text and metadata
-        """
         pages = []
         filename = os.path.basename(pdf_path)
 
@@ -55,16 +33,6 @@ class DocumentProcessor:
         return pages
 
     def chunk_text(self, text: str, metadata: Dict) -> List[Dict]:
-        """
-        Split text into chunks with overlap
-
-        Args:
-            text: Text to chunk
-            metadata: Metadata to attach to each chunk
-
-        Returns:
-            List of chunks with metadata
-        """
         tokens = self.encoding.encode(text)
         chunks = []
 
@@ -92,15 +60,6 @@ class DocumentProcessor:
         return chunks
 
     def process_document(self, pdf_path: str) -> List[Dict]:
-        """
-        Process entire PDF document into chunks
-
-        Args:
-            pdf_path: Path to PDF file
-
-        Returns:
-            List of text chunks with metadata
-        """
         pages = self.load_pdf(pdf_path)
         all_chunks = []
 
@@ -115,15 +74,6 @@ class DocumentProcessor:
         return all_chunks
 
     def process_directory(self, directory: str) -> List[Dict]:
-        """
-        Process all PDF files in a directory
-
-        Args:
-            directory: Path to directory containing PDFs
-
-        Returns:
-            List of all chunks from all documents
-        """
         all_chunks = []
 
         if not os.path.exists(directory):

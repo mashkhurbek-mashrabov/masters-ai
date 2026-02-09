@@ -1,38 +1,27 @@
-"""
-Configuration module for RAG Customer Support System
-Loads environment variables and provides configuration constants
-"""
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
-# OpenAI Configuration
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
 TEMPERATURE = float(os.getenv("TEMPERATURE", "0.7"))
 MAX_TOKENS = int(os.getenv("MAX_TOKENS", "1000"))
 
-# GitHub Configuration
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 GITHUB_REPO = os.getenv("GITHUB_REPO")
 
-# Company Information
 COMPANY_NAME = os.getenv("COMPANY_NAME", "Tesla Cybertruck Support")
 COMPANY_EMAIL = os.getenv("COMPANY_EMAIL", "support@cybertruck-support.com")
 COMPANY_PHONE = os.getenv("COMPANY_PHONE", "+1-800-TESLA-CT")
 
-# Vector Database Configuration
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "500"))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "50"))
 TOP_K_RESULTS = int(os.getenv("TOP_K_RESULTS", "3"))
 
-# Paths
 DATASOURCE_DIR = "datasource"
 VECTOR_DB_PATH = "chroma_db"
 
-# System Prompt
 SYSTEM_PROMPT = f"""You are a helpful customer support assistant for {COMPANY_NAME}.
 
 Your role is to:
@@ -51,7 +40,6 @@ When answering questions:
 - Be friendly and professional
 """
 
-# Function Calling Definitions
 FUNCTIONS = [
     {
         "type": "function",

@@ -1,7 +1,3 @@
-"""
-Vector Store Module
-Handles ChromaDB operations for document storage and retrieval
-"""
 import chromadb
 from chromadb.config import Settings
 from sentence_transformers import SentenceTransformer
@@ -9,21 +5,15 @@ from typing import List, Dict
 import os
 
 class VectorStore:
-    """Manage vector database for document retrieval"""
-
     def __init__(self, persist_directory: str = "chroma_db"):
-        """
-        Initialize vector store
-
-        Args:
-            persist_directory: Directory to persist ChromaDB data
-        """
         self.persist_directory = persist_directory
-        self.client = chromadb.PersistentClient(path=persist_directory)
+        self.client = chromadb.PersistentClient(
+            path=persist_directory,
+            settings=Settings(anonymized_telemetry=False)
+        )
         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
         self.collection_name = "cybertruck_docs"
 
-        # Get or create collection
         try:
             self.collection = self.client.get_collection(name=self.collection_name)
             print(f"✓ Loaded existing collection: {self.collection_name}")
@@ -35,12 +25,6 @@ class VectorStore:
             print(f"✓ Created new collection: {self.collection_name}")
 
     def add_documents(self, chunks: List[Dict]) -> None:
-        """
-        Add document chunks to vector store
-
-        Args:
-            chunks: List of text chunks with metadata
-        """
         if not chunks:
             print("✗ No chunks to add")
             return
@@ -71,20 +55,8 @@ class VectorStore:
         print(f"✓ Successfully indexed all chunks")
 
     def search(self, query: str, top_k: int = 3) -> List[Dict]:
-        """
-        Search for relevant documents
-
-        Args:
-            query: Search query
-            top_k: Number of results to return
-
-        Returns:
-            List of relevant documents with metadata
-        """
-        # Generate query embedding
         query_embedding = self.embedding_model.encode([query])[0]
 
-        # Search
         results = self.collection.query(
             query_embeddings=[query_embedding.tolist()],
             n_results=top_k
@@ -103,7 +75,6 @@ class VectorStore:
         return formatted_results
 
     def get_collection_stats(self) -> Dict:
-        """Get statistics about the collection"""
         count = self.collection.count()
         return {
             'collection_name': self.collection_name,
@@ -112,7 +83,6 @@ class VectorStore:
         }
 
     def clear_collection(self) -> None:
-        """Clear all documents from collection"""
         self.client.delete_collection(name=self.collection_name)
         self.collection = self.client.create_collection(
             name=self.collection_name,

@@ -23,8 +23,8 @@ A production-ready RAG (Retrieval-Augmented Generation) based customer support c
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
-cd rag-customer-support-system
+git clone git@github.com:mashkhurbek-mashrabov/masters-ai.git
+cd masters-ai/rag-customer-support-system
 ```
 
 ### 2. Install Dependencies
@@ -149,7 +149,7 @@ Or explicitly request: "Create a support ticket about [your issue]"
 
 ```bash
 # Add HuggingFace remote
-git remote add hf https://huggingface.co/spaces/YOUR_USERNAME/YOUR_SPACE_NAME
+git remote add hf https://huggingface.co/spaces/mashkhurbek/tesla-cybertruck-support
 
 # Push code
 git add .

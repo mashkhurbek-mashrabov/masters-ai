@@ -27,7 +27,7 @@ Redesign of iconic media covers using Stable Diffusion XL.
 - CFG Scale: 7
 - Sampler: DPM++ 2M Karras
 - Resolution: 768 x 1024
-- Seed: -1
+- Seed: 5647543923
 
 **Prompt:**
 ```
@@ -76,7 +76,7 @@ blurry, low quality, distorted text, watermark, signature, photo, realistic face
 - CFG Scale: 7
 - Sampler: DPM++ 2M Karras
 - Resolution: 1024 x 1024
-- Seed: -1
+- Seed: 3647563925
 
 **Prompt:**
 ```
@@ -125,7 +125,7 @@ blurry, text, words, watermark, signature, cluttered, low quality
 - CFG Scale: 7
 - Sampler: DPM++ 2M Karras
 - Resolution: 768 x 1024
-- Seed: -1
+- Seed: 2423822321
 
 **Prompt:**
 ```
